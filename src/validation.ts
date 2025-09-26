@@ -34,7 +34,7 @@ export const StartTransactionRequestSchema = z.object({
 export const StopTransactionRequestSchema = z.object({
   meterStop: z.number(),
   timestamp: z.string(),
-  transactionId: z.number(),
+  transactionId: z.number().optional(),
   reason: z.string().optional(),
   idTag: z.string().optional(),
   transactionData: z.array(z.any()).optional()

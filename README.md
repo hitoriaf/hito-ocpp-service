@@ -1,6 +1,6 @@
-# OCPP Server - Voltron Legacy
+# OCPP MicroService
 
-A TypeScript-based OCPP (Open Charge Point Protocol) 1.6-J server for electric vehicle charging station management. Built with modern technologies including WebSocket, TimescaleDB, and Redis for scalable EV charging infrastructure.
+A TypeScript-based OCPP 1.6-J server for EV charging station backend service.
 
 ## 1. Setup Instructions
 
@@ -55,9 +55,9 @@ The server runs at `ws://localhost:8080/{chargePointId}` for OCPP connections.
 
 **Tech Stack:**
 - **Runtime:** Node.js with TypeScript
-- **WebSocket:** uWebSockets.js (high-performance C++ bindings)
-- **Database:** TimescaleDB (PostgreSQL + time-series optimizations)
-- **Queue:** Redis + Bull for async job processing
+- **WebSocket:** uWebSockets.js (high performance websocket micro-framework)
+- **Database:** TimescaleDB (PostgreSQL + time-series database)
+- **Queue:** Redis + Bull for async job processing system
 - **ORM:** Prisma for type-safe database operations
 - **Validation:** Zod for runtime schema validation
 
@@ -79,18 +79,17 @@ src/
 ```
 
 **Message Flow:**
-1. **Connection:** Charge Point connects via WebSocket (`/CP001`)
+1. **Connection:** Charge Point connects via WebSocket (`/TESTCP_001`)
 2. **Reception:** `OcppController` receives raw OCPP message
 3. **Validation:** Message validated against Zod schemas
 4. **Queuing:** Valid messages pushed to Redis queue
 5. **Processing:** `QueueProcessor` handles messages asynchronously
 6. **Business Logic:** `OcppService` executes OCPP-specific actions
-7. **Persistence:** Data stored in TimescaleDB via Prisma
+7. **Persistence:** Data stored in TimescaleDB via Prisma ORM
 
 **Key Design Patterns:**
 - **Event-driven:** Async processing prevents blocking
 - **Type-safe:** End-to-end TypeScript with runtime validation
-- **Scalable:** Redis queues enable horizontal scaling
 - **Time-series optimized:** TimescaleDB for efficient meter data queries
 
 **Architecture Diagram:**
