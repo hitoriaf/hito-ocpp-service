@@ -50,7 +50,7 @@ services:
     env_file:
       - .env.production
     ports:
-      - "${PORT:-8080}:8080"
+      - "${PORT:-8080}:8081"
     depends_on:
       timescaledb:
         condition: service_healthy
