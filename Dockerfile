@@ -48,6 +48,10 @@ RUN npm ci && \
 COPY --from=builder --chown=nodejs:nodejs /usr/src/app/dist ./dist
 COPY --from=builder --chown=nodejs:nodejs /usr/src/app/prisma ./prisma
 
+# Copy start script
+COPY --chown=nodejs:nodejs start.sh ./start.sh
+RUN chmod +x ./start.sh
+
 # Set runtime DATABASE_URL (will be overridden by docker-compose)
 ENV DATABASE_URL="postgresql://placeholder:placeholder@placeholder:5432/placeholder?schema=public"
 
@@ -65,4 +69,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node -e "const http = require('http'); const options = { host: 'localhost', port: 8080, path: '/health', timeout: 2000 }; const req = http.request(options, (res) => { if (res.statusCode === 200) process.exit(0); else process.exit(1); }); req.on('error', () => process.exit(1)); req.end();" || exit 1
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["./start.sh"]

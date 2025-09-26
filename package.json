@@ -11,6 +11,7 @@
     "migrate:deploy": "npx prisma migrate deploy",
     "db:push": "npx prisma db push",
     "db:studio": "npx prisma studio",
+    "docker:rebuild": "docker-compose down && docker-compose build && docker-compose up -d",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
