@@ -5,15 +5,15 @@ A TypeScript-based OCPP (Open Charge Point Protocol) 1.6-J server for electric v
 ## 1. Setup Instructions
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (v18+)
+- [Node.js](https://nodejs.org/) (v20+)
 - [Docker](https://www.docker.com/products/docker-desktop/) & Docker Compose
 
 ### Quick Start
 
 1. **Clone and setup:**
    ```bash
-   git clone <repository-url>
-   cd voltron-ocpp-service
+   git clone https://github.com/hitoriaf/hito-ocpp-service.git
+   cd hito-ocpp-service
    npm install
    ```
 
@@ -30,8 +30,10 @@ A TypeScript-based OCPP (Open Charge Point Protocol) 1.6-J server for electric v
    ```
 
 3. **Start services:**
+
+   **For Development:**
    ```bash
-   # Start database and Redis
+   # Start database and Redis only
    docker compose up -d timescaledb redis
    
    # Run migrations
@@ -39,6 +41,12 @@ A TypeScript-based OCPP (Open Charge Point Protocol) 1.6-J server for electric v
    
    # Start development server
    npm run dev
+   ```
+
+   **For Production (All containers):**
+   ```bash
+   # Start all services including the application
+   docker compose up -d
    ```
 
 The server runs at `ws://localhost:8080/{chargePointId}` for OCPP connections.
