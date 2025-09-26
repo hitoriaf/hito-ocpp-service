@@ -25,10 +25,10 @@ CREATE TABLE "transactions" (
     "meter_stop" DOUBLE PRECISION,
     "stop_timestamp" TIMESTAMP(3),
     "stop_reason" TEXT,
-    "stop_id_tag" TEXT,
     "status" TEXT NOT NULL DEFAULT 'active',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
+    "additional_info" JSONB,
 
     CONSTRAINT "transactions_pkey" PRIMARY KEY ("transaction_id")
 );
@@ -49,9 +49,7 @@ CREATE TABLE "authorizations" (
     "id_tag" TEXT NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'Accepted',
     "expiry_date" TIMESTAMP(3),
-    "parent_id_tag" TEXT,
     "timestamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "additional_info" JSONB,
 
     CONSTRAINT "authorizations_pkey" PRIMARY KEY ("id")
 );
@@ -80,27 +78,11 @@ CREATE TABLE "meter_values" (
     "transaction_id" INTEGER,
     "timestamp" TIMESTAMP(3) NOT NULL,
     "value" TEXT NOT NULL,
-    "context" TEXT,
-    "format" TEXT,
     "measurand" TEXT,
     "phase" TEXT,
-    "location" TEXT,
     "unit" TEXT,
 
     CONSTRAINT "meter_values_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "data_transfers" (
-    "id" SERIAL NOT NULL,
-    "cp_id" TEXT NOT NULL,
-    "vendor_id" TEXT NOT NULL,
-    "message_id" TEXT,
-    "data" TEXT,
-    "status" TEXT NOT NULL DEFAULT 'Accepted',
-    "timestamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "data_transfers_pkey" PRIMARY KEY ("id")
 );
 
 -- AddForeignKey
@@ -120,6 +102,3 @@ ALTER TABLE "meter_values" ADD CONSTRAINT "meter_values_cp_id_fkey" FOREIGN KEY 
 
 -- AddForeignKey
 ALTER TABLE "meter_values" ADD CONSTRAINT "meter_values_transaction_id_fkey" FOREIGN KEY ("transaction_id") REFERENCES "transactions"("transaction_id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "data_transfers" ADD CONSTRAINT "data_transfers_cp_id_fkey" FOREIGN KEY ("cp_id") REFERENCES "charge_points"("cp_id") ON DELETE RESTRICT ON UPDATE CASCADE;
