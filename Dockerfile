@@ -13,7 +13,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install all dependencies (including devDependencies)
-RUN npm ci
+RUN npm i
 
 # Copy source code and config files
 COPY . .
