@@ -49,6 +49,40 @@ A TypeScript-based OCPP 1.6-J server for EV charging station backend service.
    docker compose up -d
    ```
 
+4. **Test Services:**
+   ```bash
+   # Run all tests
+   npm test
+   
+   # Run tests with coverage
+   npm run test:coverage
+   
+   # Run tests in watch mode for development
+   npm run test:watch
+   
+   # Run specific test files
+   npm test -- OcppService.test.ts
+   npm test -- OcppController.test.ts
+   
+   # Run integration tests
+   npm test -- integration/
+   ```
+
+   **Testing WebSocket Connection:**
+   ```bash
+   # Test OCPP connection with wscat (install if needed)
+   npm install -g wscat
+   
+   # Connect to charge point endpoint
+   wscat -c ws://localhost:8080/TESTCP_001
+   
+   # Send BootNotification message
+   [2,"12345","BootNotification",{"chargePointVendor":"TestVendor","chargePointModel":"TestModel"}]
+   
+   # Send Heartbeat message  
+   [2,"67890","Heartbeat",{}]
+   ```
+
 The server runs at `ws://localhost:8080/{chargePointId}` for OCPP connections.
 
 ## 2. Architecture Overview
