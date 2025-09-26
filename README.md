@@ -20,13 +20,22 @@ A TypeScript-based OCPP 1.6-J server for EV charging station backend service.
 2. **Environment configuration:**
    Create `.env` file:
    ```env
-   PORT=8080
-   POSTGRES_DB=ocpp_db
-   POSTGRES_USER=user
-   POSTGRES_PASSWORD=password
-   POSTGRES_PORT=5432
-   REDIS_PORT=6379
-   DATABASE_URL="postgresql://user:password@localhost:5432/ocpp_db?schema=public"
+    # Database Configuration
+    POSTGRES_DB=voltron_db
+    POSTGRES_USER=voltron_user
+    POSTGRES_PASSWORD=voltron_password
+    POSTGRES_PORT=5434
+    POSTGRES_HOST=localhost
+
+    # Server Configuration
+    PORT=8080
+    NODE_ENV=development
+    DATABASE_URL="postgresql://voltron_user:voltron_password@localhost:5434/voltron_db?schema=public"
+
+    PRISMA_MIGRATION_PATH="./database/migrations"
+
+    REDIS_PORT=6380
+    REDIS_HOST=localhost
    ```
 
 3. **Start services:**
