@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ChargePoint {
+  cpId              String    @id @map("cp_id")
+  model             String?
+  vendor            String?
+  firmwareVersion   String?   @map("firmware_version")
+  serialNumber      String?   @map("serial_number")
+  lastSeen          DateTime? @map("last_seen")
+  status            String?   @default("Available")
+  additionalInfo    Json?     @map("additional_info")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  transactions      Transaction[]
+  heartbeats        Heartbeat[]
+  authorizations    Authorization[]
+  statusNotifications StatusNotification[]
+  meterValues       MeterValue[]
+
+  @@map("charge_points")
+}
+
+model Transaction {
+  transactionId     Int       @id @default(autoincrement()) @map("transaction_id")
+  cpId              String    @map("cp_id")
+  connectorId       Int       @map("connector_id")
+  idTag             String    @map("id_tag")
+  meterStart        Float?    @map("meter_start")
+  startTimestamp    DateTime  @map("start_timestamp")
+  meterStop         Float?    @map("meter_stop")
+  stopTimestamp     DateTime? @map("stop_timestamp")
+  stopReason        String?   @map("stop_reason")
+  status            String    @default("active")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  additionalInfo    Json?     @map("additional_info")
+
+  // Relations
+  chargePoint       ChargePoint @relation(fields: [cpId], references: [cpId])
+  meterValues       MeterValue[]
+
+  @@map("transactions")
+}
+
+model Heartbeat {
+  id        Int      @id @default(autoincrement())
+  cpId      String   @map("cp_id")
+  timestamp DateTime @default(now())
+
+  // Relations
+  chargePoint ChargePoint @relation(fields: [cpId], references: [cpId])
+
+  @@map("heartbeats")
+}
+
+model Authorization {
+  id             Int       @id @default(autoincrement())
+  cpId           String    @map("cp_id")
+  idTag          String    @map("id_tag")
+  status         String    @default("Accepted")
+  expiryDate     DateTime? @map("expiry_date")
+  timestamp      DateTime  @default(now())
+
+  // Relations
+  chargePoint    ChargePoint @relation(fields: [cpId], references: [cpId])
+
+  @@map("authorizations")
+}
+
+model StatusNotification {
+  id                Int      @id @default(autoincrement())
+  cpId              String   @map("cp_id")
+  connectorId       Int      @map("connector_id")
+  status            String
+  errorCode         String?  @map("error_code")
+  info              String?
+  vendorId          String?  @map("vendor_id")
+  vendorErrorCode   String?  @map("vendor_error_code")
+  timestamp         DateTime @default(now())
+  additionalInfo    Json?    @map("additional_info")
+
+  // Relations
+  chargePoint       ChargePoint @relation(fields: [cpId], references: [cpId])
+
+  @@map("status_notifications")
+}
+
+model MeterValue {
+  id            Int      @id @default(autoincrement())
+  cpId          String   @map("cp_id")
+  connectorId   Int      @map("connector_id")
+  transactionId Int?     @map("transaction_id")
+  timestamp     DateTime
+  value         String
+  measurand     String?
+  phase         String?
+  unit          String?
+
+  // Relations
+  chargePoint   ChargePoint  @relation(fields: [cpId], references: [cpId])
+  transaction   Transaction? @relation(fields: [transactionId], references: [transactionId])
+
+  @@map("meter_values")
+}
