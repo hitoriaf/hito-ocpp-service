@@ -19,9 +19,11 @@ services:
       - voltron_network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 30s
+      interval: 5s
       timeout: 10s
       retries: 5
+    env_file:
+      - .env.production
 
   redis:
     image: redis:7-alpine
@@ -35,9 +37,11 @@ services:
       - voltron_network
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
+      interval: 5s
       timeout: 10s
       retries: 5
+    env_file:
+      - .env.production
 
   ocpp-server:
     build: .
